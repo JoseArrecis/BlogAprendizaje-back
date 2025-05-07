@@ -1,3 +1,5 @@
+import express from "express"
+
 const configs = (app) => {
     app.use(express.json())
     app.use(express.urlencoded({extended: false}))
