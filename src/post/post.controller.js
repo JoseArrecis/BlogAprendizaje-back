@@ -105,32 +105,26 @@ export const getPostById = async(req, res)=>{
     }
 }
 
-export const updatePost = async(req, res)=>{
+export const filtrarPorCurso = async (req, res) => {
     try {
-        const { id } = req.params
-        const { title, description, course } = req.body
-        
-        const post = await Post.findById(id)
-        if(!post){
-            return res.status(404).send(
+        const { curso } = req.query
+
+        if (!curso) {
+            return res.status(400).json(
                 {
-                    sucecss: false,
-                    message: 'Post not found'
+                    success: false,
+                    message: "No se encontró el curso",
                 }
             )
         }
 
-        const updatePost = await Post.findbyIdAndUpdate(
-            id,
-            { title, description, course },
-            { new: true, runValidators: true }
-        ) 
+        const Postes = await Post.find({ cursoPost: curso }).populate("comentarios")
 
-        return res.send(
+        return res.status(200).json(
             {
                 success: true,
-                message: 'Post updated successfully',
-                post: updatePost
+                total: Postes.length,
+                Postes,
             }
         )
     }catch (err) {
@@ -145,27 +139,74 @@ export const updatePost = async(req, res)=>{
     }
 }
 
-export const deletePost = async(req, res)=>{
+export const filtrarPorTitulo = async (req, res) => {
     try {
-        const { id } = req.params
-        
-        const post = await Post.findById(id)
-        if(!post){
-            return res.status(404).send(
+        const { titulo } = req.query
+
+        if (!titulo) {
+            return res.status(400).json(
                 {
                     success: false,
-                    message: 'Post not found'
+                    message: "No se encontró el título",
                 }
             )
         }
 
-        await post.deleteOne()
-        return res.send(
+        const Postes = await Post.find({ tituloPost: { $regex: titulo, $options: "i" } })
+            .populate("comentarios")
+
+        return res.status(200).json(
             {
                 success: true,
-                message: 'Post deleted succesfully'
+                total: Postes.length,
+                Postes,
             }
         )
+    }catch (err) {
+        console.error(err);
+        return res.status(500).send(
+            { 
+                success: false, 
+                message: 'General error', 
+                err 
+            }
+        )
+    }
+}
+
+export const filtrarPorFechas = async (req, res) => {
+    try {
+        const { fechaInicio, fechaFin } = req.query
+
+        if (!fechaInicio || !fechaFin) {
+            return res.status(400).json(
+                {
+                    success: false,
+                    message: "Los parámetros 'fechaInicio' y 'fechaFin' son obligatorios",
+                }
+            )
+        }
+
+        const fechaInicioObj = new Date(fechaInicio)
+        fechaInicioObj.setHours(0, 0, 0, 0)
+
+        const fechaFinObj = new Date(fechaFin)
+        fechaFinObj.setHours(23, 59, 59, 999)
+
+        const Postes = await Post.find(
+            {
+                fechaPost: {
+                    $gte: fechaInicioObj,
+                    $lte: fechaFinObj,
+                },
+            }
+        ).populate("comentarios");
+
+        return res.status(200).json({
+            success: true,
+            total: Postes.length,
+            Postes,
+        });
     }catch (err) {
         console.error(err);
         return res.status(500).send(
