@@ -19,10 +19,6 @@ const postSchema = Schema(
         createdAt: {
             type: Date,
             default: Date.now
-        },
-        status: {
-            type: Boolean,
-            default: true
         }
     }
 )

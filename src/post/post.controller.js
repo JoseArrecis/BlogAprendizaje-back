@@ -105,7 +105,7 @@ export const getPostById = async(req, res)=>{
     }
 }
 
-export const filtrarPorCurso = async (req, res) => {
+export const filterByCourse = async (req, res) => {
     try {
         const { curso } = req.query
 
@@ -139,7 +139,7 @@ export const filtrarPorCurso = async (req, res) => {
     }
 }
 
-export const filtrarPorTitulo = async (req, res) => {
+export const filterByTitle = async (req, res) => {
     try {
         const { titulo } = req.query
 
@@ -174,7 +174,7 @@ export const filtrarPorTitulo = async (req, res) => {
     }
 }
 
-export const filtrarPorFechas = async (req, res) => {
+export const filterByDate = async (req, res) => {
     try {
         const { fechaInicio, fechaFin } = req.query
 
