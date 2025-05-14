@@ -1,7 +1,7 @@
 import Comentario from "./comentarios.model.js";
-import Post from "../Post/Post.model.js";
+import Post from "../post/post.model.js";
 
-export const agregarComentario = async (req, res) => {
+export const addComment = async (req, res) => {
     try {
         const { usuario, contenidoComentario, PostId } = req.body    
 
@@ -42,7 +42,7 @@ export const agregarComentario = async (req, res) => {
     }
 }
 
-export const editarComentario = async (req, res) => {
+export const editComment = async (req, res) => {
     try {
         const { comentarioId } = req.params
         const { contenidoComentario } = req.body
@@ -87,7 +87,7 @@ export const editarComentario = async (req, res) => {
     }
 }
 
-export const eliminarComentario = async (req, res) => {
+export const deleteComment = async (req, res) => {
     try {
         const { comentarioId } = req.params;
 
@@ -125,7 +125,7 @@ export const eliminarComentario = async (req, res) => {
     }
 }
 
-export const verComentariosDePost = async (req, res) => {
+export const getCommentsByPost = async (req, res) => {
     try {
         const { uidPublic } = req.params;
 
@@ -163,89 +163,6 @@ export const verComentariosDePost = async (req, res) => {
         )
     }
 }
-
-export const editarPost = async (req, res) => {
-    try {
-        const { PostId } = req.params
-        const { tituloPost, contenidoPost } = req.body
-
-        if (!tituloPost || !contenidoPost) {
-            return res.status(400).json(
-                {
-                    success: false,
-                    message: "El título y el contenido de la publicación son obligatorios",
-                }
-            )
-        }
-
-        const PostActualizada = await Post.findByIdAndUpdate(
-            PostId,
-            { tituloPost, contenidoPost },
-            { new: true }
-        )
-
-        if (!PostActualizada) {
-            return res.status(404).json(
-                {
-                    success: false,
-                    message: "La publicación especificada no existe",
-                }
-            )
-        }
-
-        res.status(200).json(
-            {
-                success: true,
-                message: "Publicación editada correctamente",
-                Post: PostActualizada,
-            }
-        )
-    }catch (err) {
-        console.error(err);
-        return res.status(500).send(
-            { 
-                success: false, 
-                message: 'General error', 
-                err 
-            }
-        )
-    }
-}
-
-export const eliminarPost = async (req, res) => {
-    try {
-        const { PostId } = req.params
-
-        const PostEliminada = await Post.findByIdAndDelete(PostId)
-
-        if (!PostEliminada) {
-            return res.status(404).json(
-                {
-                    success: false,
-                    message: "La publicación especificada no existe",
-                }
-            )
-        }
-
-        res.status(200).json(
-            {
-                success: true,
-                message: "Publicación eliminada correctamente",
-                Post: PostEliminada,
-            }
-        )
-    }catch (err) {
-        console.error(err);
-        return res.status(500).send(
-            { 
-                success: false, 
-                message: 'General error', 
-                err 
-            }
-        )
-    }
-}
-
 export const verPost = async (req, res) => {
     try {
         const Post = await Post.find().populate("comentarios", "contenidoComentario usuario _id")

@@ -1,11 +1,13 @@
 import { Router } from "express";
 import { 
     createPost, 
+    deletePost, 
     filterByCourse, 
     filterByDate, 
     filterByTitle, 
     getAllPosts, 
-    getPostById 
+    getPostById, 
+    updatePost
 } from "./post.controller.js";
 
 const api = Router()
@@ -23,6 +25,16 @@ api.get(
 api.get(
     '/:id',
     getPostById
+)
+
+api.put(
+    '/:id',
+    updatePost
+)
+
+api.delete(
+    '/:id',
+    deletePost
 )
 
 api.get(

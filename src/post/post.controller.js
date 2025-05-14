@@ -1,4 +1,4 @@
-import Post from '../models/Post.js'
+import Post from './post.model.js'
 
 export const createPost = async(req, res)=>{
     try {
@@ -101,6 +101,81 @@ export const getPostById = async(req, res)=>{
                 message: 'General error', 
                 err 
             }
+        )
+    }
+}
+
+export const updatePost = async (req, res) => {
+    try {
+        const { id } = req.params
+        const { title, mainText } = req.body
+
+        const publication = await Post.findById(id)
+        if (!publication) {
+            return res.status(404).send(
+                { 
+                    success: false, 
+                    message: "Publication not found" 
+                }
+            )
+        }
+
+        const updatedPublication = await Post.findByIdAndUpdate(
+            id,
+            { title, mainText }, 
+            { new: true, runValidators: true } 
+        )
+
+        return res.send(
+            {
+                success: true,
+                message: "Publication updated successfully",
+                publication: updatedPublication
+            }
+        )
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send(
+            { 
+                success: false,
+                message: "General error", 
+                err 
+            } 
+        )
+    }
+}
+
+export const deletePost = async(req, res)=>{
+    try {
+        const { id } = req.params
+
+        const post = await Post.findById(id)
+        if(!post){
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'Post not found'
+                }
+            )
+        }
+
+        await post.deleteOne()
+        return res.send(
+            { 
+                success: true, 
+                message: "Post deleted successfully" 
+            }
+        )
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send(
+            { 
+                success: false,
+                message: "General error", 
+                err 
+            } 
         )
     }
 }
