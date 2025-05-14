@@ -1,4 +1,4 @@
-import Comentario from "./comentarios.model.js";
+import Comment from "./comment.model.js";
 import Post from "../post/post.model.js";
 
 export const addComment = async (req, res) => {
@@ -42,84 +42,76 @@ export const addComment = async (req, res) => {
     }
 }
 
-export const editComment = async (req, res) => {
+export const updateComment = async(req, res)=>{
     try {
-        const { comentarioId } = req.params
-        const { contenidoComentario } = req.body
+        const { id } = req.params
+        const { text } = req.body
 
-        if (!contenidoComentario) {
-            return res.status(400).json(
+        const comment = await Comment.findById(id)
+        if(!comment){
+            return res.status(404).send(
                 {
                     success: false,
-                    message: "El contenido del comentario es obligatorio",
+                    message: 'Comment not found'
                 }
             )
         }
 
-        const comentarioActualizado = await Comentario.findByIdAndUpdate(
-            comentarioId,
-            { contenidoComentario },
-            { new: true }
+        const updateComment = await Comment.findByIdAndUpdate(
+            id,
+            { text },
+            { new: true, runValidators: true }
         )
 
-        if (!comentarioActualizado) {
-            return res.status(404).json(
-                {
-                    success: false,
-                    message: "El comentario especificado no existe",
-                }
-            )
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Comentario editado correctamente",
-            comentario: comentarioActualizado,
-        });
-    } catch (err) {
-        res.status(500).json(
+        return res.send(
             {
-                success: false,
-                message: "Error al editar el comentario",
-                error: err.message,
+                success: true,
+                message: 'Comment updated succesfully',
+                comment: updateComment
+            }
+        )
+
+    }catch (err) {
+        console.error(err);
+        return res.status(500).send(
+            { 
+                success: false, 
+                message: 'General error', 
+                err 
             }
         )
     }
 }
 
-export const deleteComment = async (req, res) => {
+export const deleteComment = async(req, res)=>{
     try {
-        const { comentarioId } = req.params;
+        const { id } = req.params
 
-        const comentarioEliminado = await Comentario.findByIdAndDelete(comentarioId);
-
-        if (!comentarioEliminado) {
-            return res.status(404).json(
+        const comment = await Comment.findById(id)
+        if(!comment){
+            return res.status(404).send(
                 {
                     success: false,
-                    message: "El comentario especificado no existe",
+                    message: 'Comment not found'
                 }
             )
         }
 
-        await Post.findByIdAndUpdate(
-            comentarioEliminado.Post,
-            { $pull: { comentarios: comentarioId } }
-        )
-
-        res.status(200).json(
+        await comment.deleteOne()
+        return res.send(
             {
                 success: true,
-                message: "Comentario eliminado correctamente",
-                comentario: comentarioEliminado,
+                message: 'Comment deleted succesfully'
             }
         )
-    } catch (err) {
-        res.status(500).json(
-            {
-                success: false,
-                message: "Error al eliminar el comentario",
-                error: err.message,
+
+    }catch (err) {
+        console.error(err);
+        return res.status(500).send(
+            { 
+                success: false, 
+                message: 'General error', 
+                err 
             }
         )
     }
@@ -140,7 +132,7 @@ export const getCommentsByPost = async (req, res) => {
             return res.status(404).json(
                 {
                     success: false,
-                    message: "La publicación especificada no existe",
+                    message: "The post specify not exists",
                 }
             )
         }
@@ -148,7 +140,7 @@ export const getCommentsByPost = async (req, res) => {
         res.status(200).json(
             {
                 success: true,
-                message: "Comentarios de la publicación",
+                message: "Comments on the post",
                 comentarios: Post.comentarios,
             }
         )
@@ -163,26 +155,3 @@ export const getCommentsByPost = async (req, res) => {
         )
     }
 }
-export const verPost = async (req, res) => {
-    try {
-        const Post = await Post.find().populate("comentarios", "contenidoComentario usuario _id")
-
-        res.status(200).json(
-            {
-                success: true,
-                message: "Lista de Postes",
-                Post,
-            }
-        )
-    }catch (err) {
-        console.error(err);
-        return res.status(500).send(
-            { 
-                success: false, 
-                message: 'General error', 
-                err 
-            }
-        )
-    }
-}
-
