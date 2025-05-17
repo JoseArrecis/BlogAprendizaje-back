@@ -1,13 +1,11 @@
 import { Router } from "express";
 import { 
     createPost, 
-    deletePost, 
     filterByCourse, 
     filterByDate, 
     filterByTitle, 
     getAllPosts, 
     getPostById, 
-    updatePost
 } from "./post.controller.js";
 
 const api = Router()
@@ -27,23 +25,13 @@ api.get(
     getPostById
 )
 
-api.put(
-    '/:id',
-    updatePost
-)
-
-api.delete(
-    '/:id',
-    deletePost
-)
-
 api.get(
-    '/filter/course',
+    '/filter/course/:course',
     filterByCourse
 )
 
 api.get(
-    '/filter/title',
+    '/filter/title/:title',
     filterByTitle
 )
 

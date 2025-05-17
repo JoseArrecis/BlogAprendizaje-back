@@ -11,10 +11,10 @@ const postSchema = Schema(
             type: String,
             required: [true, 'Description is required'],
         },
-        courses: {
+        course: {
             type: String,
-            required: [true, 'Courses is required'],
-            enum: ['Tecnología', 'Practica Supervisada', 'Taller']
+            required: [true, 'Course is required'],
+            enum: ['Tecnologia', 'Practica Supervisada', 'Taller']
         },
         createdAt: {
             type: Date,

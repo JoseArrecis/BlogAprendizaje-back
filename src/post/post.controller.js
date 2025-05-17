@@ -105,86 +105,11 @@ export const getPostById = async(req, res)=>{
     }
 }
 
-export const updatePost = async (req, res) => {
-    try {
-        const { id } = req.params
-        const { title, mainText } = req.body
-
-        const publication = await Post.findById(id)
-        if (!publication) {
-            return res.status(404).send(
-                { 
-                    success: false, 
-                    message: "Publication not found" 
-                }
-            )
-        }
-
-        const updatedPublication = await Post.findByIdAndUpdate(
-            id,
-            { title, mainText }, 
-            { new: true, runValidators: true } 
-        )
-
-        return res.send(
-            {
-                success: true,
-                message: "Publication updated successfully",
-                publication: updatedPublication
-            }
-        )
-
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send(
-            { 
-                success: false,
-                message: "General error", 
-                err 
-            } 
-        )
-    }
-}
-
-export const deletePost = async(req, res)=>{
-    try {
-        const { id } = req.params
-
-        const post = await Post.findById(id)
-        if(!post){
-            return res.status(404).send(
-                {
-                    success: false,
-                    message: 'Post not found'
-                }
-            )
-        }
-
-        await post.deleteOne()
-        return res.send(
-            { 
-                success: true, 
-                message: "Post deleted successfully" 
-            }
-        )
-
-    } catch (err) {
-        console.error(err);
-        return res.status(500).send(
-            { 
-                success: false,
-                message: "General error", 
-                err 
-            } 
-        )
-    }
-}
-
 export const filterByCourse = async (req, res) => {
     try {
-        const { curso } = req.query
+        const { course } = req.params
 
-        if (!curso) {
+        if (!course) {
             return res.status(400).json(
                 {
                     success: false,
@@ -193,13 +118,13 @@ export const filterByCourse = async (req, res) => {
             )
         }
 
-        const Postes = await Post.find({ cursoPost: curso }).populate("comentarios")
+        const Posts = await Post.find({ course: { $regex: `^${course}$`, $options: "i" } });
 
         return res.status(200).json(
             {
                 success: true,
-                total: Postes.length,
-                Postes,
+                total: Posts.length,
+                Posts,
             }
         )
     }catch (err) {
@@ -216,9 +141,9 @@ export const filterByCourse = async (req, res) => {
 
 export const filterByTitle = async (req, res) => {
     try {
-        const { titulo } = req.query
+        const { title } = req.params
 
-        if (!titulo) {
+        if (!title) {
             return res.status(400).json(
                 {
                     success: false,
@@ -227,14 +152,14 @@ export const filterByTitle = async (req, res) => {
             )
         }
 
-        const Postes = await Post.find({ tituloPost: { $regex: titulo, $options: "i" } })
-            .populate("comentarios")
+        const Posts = await Post.find({ title: { $regex: title, $options: "i" } });
+
 
         return res.status(200).json(
             {
                 success: true,
-                total: Postes.length,
-                Postes,
+                total: Posts.length,
+                Posts,
             }
         )
     }catch (err) {
