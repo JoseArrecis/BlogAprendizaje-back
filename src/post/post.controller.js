@@ -13,7 +13,7 @@ export const createPost = async(req, res)=>{
             )
         }
 
-        const validCourses = ['Cocina', 'Mueblería', 'Programación']
+        const validCourses = ['Tecnologia', 'Practica Supervisada', 'Taller']
         if(!validCourses.includes(course)){
             return res.status(400).send(
                 {
@@ -23,7 +23,7 @@ export const createPost = async(req, res)=>{
             )
         }
 
-        const newPost = new postMessage({ title, description, course })
+        const newPost = new Post({ title, description, course })
         await newPost.save()
 
         return res.status(201).send(
