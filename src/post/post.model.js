@@ -16,6 +16,12 @@ const postSchema = Schema(
             required: [true, 'Course is required'],
             enum: ['Tecnologia', 'Practica Supervisada', 'Taller']
         },
+        comments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Comment'
+            }
+        ],
         createdAt: {
             type: Date,
             default: Date.now

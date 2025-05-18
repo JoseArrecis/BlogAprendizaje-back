@@ -1,4 +1,5 @@
 import Post from './post.model.js'
+import Comments from '../comment/comment.model.js'
 
 export const createPost = async(req, res)=>{
     try {
@@ -45,65 +46,68 @@ export const createPost = async(req, res)=>{
     }
 }
 
-export const getAllPosts = async(req, res)=>{
+export const getAllPosts = async (req, res) => {
     try {
-        const { course } = req.query
-        const filter = course ? { course } : {}
-
-        const posts = await Post.find(filter).sort({ created: -1 })
-        return res.send(
+        const posts = await Post.find().populate(
             {
-                success: true,
-                total: posts.length,
-                posts
+                path: 'comments',
+                select: 'user content date'
             }
         )
-    }catch (err) {
-        console.error(err);
-        return res.status(500).send(
-            { 
-                success: false, 
-                message: 'General error', 
-                err 
+
+        return res.status(200).json(
+            {
+            success: true,
+            posts
+            }
+        )
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json(
+            {
+                success: false,
+                message: 'Error fetching posts',
+                error
             }
         )
     }
 }
 
-export const getPostById = async(req, res)=>{
+export const getPostById = async (req, res) => {
     try {
-        const { id } = req.params
-        
+        const { id } = req.params;
+
         const post = await Post.findById(id)
-        if(!post){
-            return res.status(
-                {
-                    success: false,
-                    message: 'Post not found'
-                }
-            )
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'user',
+                    select: 'username'
+                },
+                options: { sort: { date: -1 } }
+            });
+
+        if (!post) {
+            return res.status(404).send({
+                success: false,
+                message: 'Post not found'
+            });
         }
 
-        const comments = await Comment.find({ postId: id }.sort({ createdAt: -1 }))
-        
-        return res.send(
-            {
-                success: true,
-                post,
-                comments
-            }
-        )
-    }catch (err) {
+        return res.send({
+            success: true,
+            post
+        });
+
+    } catch (err) {
         console.error(err);
-        return res.status(500).send(
-            { 
-                success: false, 
-                message: 'General error', 
-                err 
-            }
-        )
+        return res.status(500).send({
+            success: false,
+            message: 'General error',
+            err
+        });
     }
-}
+};
 
 export const filterByCourse = async (req, res) => {
     try {
@@ -118,7 +122,8 @@ export const filterByCourse = async (req, res) => {
             )
         }
 
-        const Posts = await Post.find({ course: { $regex: `^${course}$`, $options: "i" } });
+        const Posts = await Post.find({ course: { $regex: `^${course}$`, $options: "i" } })
+            .populate('comments')
 
         return res.status(200).json(
             {
@@ -152,8 +157,8 @@ export const filterByTitle = async (req, res) => {
             )
         }
 
-        const Posts = await Post.find({ title: { $regex: title, $options: "i" } });
-
+        const Posts = await Post.find({ title: { $regex: title, $options: "i" } })
+            .populate('comments')
 
         return res.status(200).json(
             {

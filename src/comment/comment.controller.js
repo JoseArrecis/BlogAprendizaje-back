@@ -3,20 +3,20 @@ import Post from "../post/post.model.js";
 
 export const addComment = async (req, res) => {
     try {
-        const { user, content, PostId } = req.body
+        const { user, content, post } = req.body
 
         const nuevoComment = new Comment(
             {
                 user,
                 content,
-                post: PostId
+                post
             }
         )
 
         await nuevoComment.save()
 
         await Post.findByIdAndUpdate(
-            PostId,
+            post,
             { $push: { comments: nuevoComment._id } }, 
             { new: true }
         )
