@@ -1,0 +1,264 @@
+{
+	"info": {
+		"_postman_id": "dcb2e088-e480-4af9-8570-2520a618ec5f",
+		"name": "Blog de Aprendizaje",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37951912"
+	},
+	"item": [
+		{
+			"name": "POST",
+			"item": [
+				{
+					"name": "addPost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Agenda Web\",\r\n    \"description\": \"Este proyecto fue creado basado en una agenda Web\",\r\n    \"course\": \"Practica Supervisada\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:2656/v1/post/",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"post",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filterByCourse",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"No se porque se borro xd\",\r\n    \"description\": \"lol\",\r\n    \"course\": \"Tecnologia\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:2656/v1/post/filter/course/Taller",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"post",
+								"filter",
+								"course",
+								"Taller"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filterByTitle",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"No se porque se borro xd\",\r\n    \"description\": \"lol\",\r\n    \"course\": \"Tecnologia\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:2656/v1/post/filter/title/No se porque se borro xd",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"post",
+								"filter",
+								"title",
+								"No se porque se borro xd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllPosts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"No se porque se borro xd\",\r\n    \"description\": \"lol\",\r\n    \"course\": \"Tecnologia\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:2656/v1/post/getAll",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"post",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filterByDate",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"No se porque se borro xd\",\r\n    \"description\": \"lol\",\r\n    \"course\": \"Tecnologia\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:2656/v1/post/filter/date?fechaInicio=2025-05-16&fechaFin=2025-05-16",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"post",
+								"filter",
+								"date"
+							],
+							"query": [
+								{
+									"key": "fechaInicio",
+									"value": "2025-05-16"
+								},
+								{
+									"key": "fechaFin",
+									"value": "2025-05-16"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPostById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"No se porque se borro xd\",\r\n    \"description\": \"lol\",\r\n    \"course\": \"Tecnologia\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:2656/v1/post/6824030b2e460d9e75993f90",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"post",
+								"6824030b2e460d9e75993f90"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "COMMENT",
+			"item": [
+				{
+					"name": "addComment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": \"Jose Arrecis\",\r\n    \"content\": \"https://github.com/JoseArrecis/Computadoras.git\",\r\n    \"post\": \"682a2392b3a164bd317a1990\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:2656/v1/comment/",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"comment",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCommentById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"No se porque se borro xd\",\r\n    \"description\": \"lol\",\r\n    \"course\": \"Tecnologia\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:2656/v1/comment/6827c371d46df7eacfa178ce",
+							"host": [
+								"localhost"
+							],
+							"port": "2656",
+							"path": [
+								"v1",
+								"comment",
+								"6827c371d46df7eacfa178ce"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
